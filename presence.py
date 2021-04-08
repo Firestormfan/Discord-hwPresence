@@ -8,13 +8,21 @@ with open("config.json") as f:
 RPC = pypresence.Presence(829135546538000384)
 RPC.connect()
 print("Discord Rich Presenceに接続しました。")
+
+def get_readable_size(size):
+    abs_size = abs(size)
+    for suffix in ['B', 'KB', 'MB', 'GB', 'TB']:
+        if abs_size < 1024:
+            return f'{abs_size:3.2f} {suffix}'
+        abs_size /= 1024
+
 try:
     if config['mode'] == "adv":
         while True:
             memory = psutil.virtual_memory()
             RPC.update(
                 state=f"CPU:{psutil.cpu_percent()}% Threads:{psutil.cpu_count()}",
-                details=f"MEMORY:{memory.percent}% Total:{memory.total}KB",
+                details=f"MEMORY:{memory.percent}% Total:{get_readable_size(memory.total)}",
                 large_image="meter",
                 large_text="Hardware_status"
                 )
